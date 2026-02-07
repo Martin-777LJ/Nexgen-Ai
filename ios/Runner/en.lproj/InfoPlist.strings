@@ -1,0 +1,9 @@
+/* 
+  infoPlist.strings
+  Runner
+
+  Created by BillyPark on 11/16/24.
+  
+*/
+CFBundleDisplayName = "My Ollama";
+NSPhotoLibraryUsageDescription = "The app needs permission to use the photo album to analyze photos.";

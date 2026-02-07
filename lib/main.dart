@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:intl/intl.dart';
 
 import 'views/drawer.dart';
 import 'views/desktop_view.dart';
 import 'provider/main_provider.dart';
 import 'utils/platform_utils.dart';
 
-//--------------------------------------------------------------------------//
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
@@ -24,13 +24,13 @@ void main() async {
       ChangeNotifierProvider(create: (_) => MainProvider()),
     ],
     child: EasyLocalization(
-        supportedLocales: [
+        supportedLocales: const [
           Locale('en', 'US'),
           Locale('ko', 'KR'),
           Locale('ja', 'JP')
         ],
         path: 'assets/translations',
-        fallbackLocale: Locale('en', 'US'),
+        fallbackLocale: const Locale('en', 'US'),
         child: MyOllama()),
   ));
 }
@@ -59,11 +59,26 @@ class MyOllama extends StatelessWidget {
         ),
         scaffoldBackgroundColor: const Color(0xFF0F0F0F),
       ),
-      home: const InitializationWrapper(),
-    ); // <--- ENSURE THIS PARENTHESIS AND SEMICOLON ARE HERE
+      home: InitializationWrapper(), // Removed 'const' here
+    );
   }
-} // <--- ENSURE THIS CLOSING BRACE IS HERE
+}
 
+class InitializationWrapper extends StatefulWidget {
+  @override
+  _InitializationWrapperState createState() => _InitializationWrapperState();
+}
+
+class _InitializationWrapperState extends State<InitializationWrapper> {
+  @override
+  void initState() {
+    super.initState();
+    // Use addPostFrameCallback to handle initialization after build context is ready
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setLocale(context);
+      _initializeApp();
+    });
+  }
 
   Future<void> setLocale(BuildContext context) async {
     String currentLocale = Intl.getCurrentLocale();
@@ -83,6 +98,7 @@ class MyOllama extends StatelessWidget {
   }
 
   Future<void> _initializeApp() async {
+    // Context is now valid because we are using a member variable or PostFrameCallback
     final provider = Provider.of<MainProvider>(context, listen: false);
     await provider.initialize();
   }
@@ -97,8 +113,8 @@ class MyOllama extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CircularProgressIndicator(),
-                  SizedBox(height: 20),
+                  const CircularProgressIndicator(),
+                  const SizedBox(height: 20),
                   Text(provider.serveConnected
                           ? 'Initializing...'
                           : 'Setting up local server...')

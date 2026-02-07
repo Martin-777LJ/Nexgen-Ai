@@ -35,7 +35,6 @@ void main() async {
   ));
 }
 
-//--------------------------------------------------------------------------//
 class MyOllama extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -44,40 +43,27 @@ class MyOllama extends StatelessWidget {
       supportedLocales: context.supportedLocales,
       locale: context.locale,
       localizationsDelegates: context.localizationDelegates,
-            theme: ThemeData(
+      theme: ThemeData(
         useMaterial3: true,
-        brightness: Brightness.dark, // Switches to Dark Mode
+        brightness: Brightness.dark,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.orangeAccent, // NexGen Accent Color
+          seedColor: Colors.orangeAccent,
           brightness: Brightness.dark,
           primary: Colors.orangeAccent,
-          surface: Color(0xFF121212), // Deep Charcoal background
+          surface: const Color(0xFF121212),
         ),
-        appBarTheme: AppBarTheme(
-          backgroundColor: Color(0xFF1A1A1A), // Darker App Bar
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Color(0xFF1A1A1A),
           foregroundColor: Colors.white,
           elevation: 0,
         ),
-        scaffoldBackgroundColor: Color(0xFF0F0F0F), // True Dark background
+        scaffoldBackgroundColor: const Color(0xFF0F0F0F),
       ),
-
-
-//--------------------------------------------------------------------------//
-class InitializationWrapper extends StatefulWidget {
-  @override
-  _InitializationWrapperState createState() => _InitializationWrapperState();
-}
-
-//--------------------------------------------------------------------------//
-class _InitializationWrapperState extends State<InitializationWrapper> {
-  @override
-  void initState() {
-    super.initState();
-    Future.delayed(Duration.zero, () {
-      setLocale(context);
-      _initializeApp();
-    });
+      home: const InitializationWrapper(),
+    ); // <--- ENSURE THIS PARENTHESIS AND SEMICOLON ARE HERE
   }
+} // <--- ENSURE THIS CLOSING BRACE IS HERE
+
 
   Future<void> setLocale(BuildContext context) async {
     String currentLocale = Intl.getCurrentLocale();
